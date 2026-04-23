@@ -6,7 +6,7 @@
   "torch_dtype": "bfloat16",
   "trust_remote_code": false,
 
-  "train_file": "data/pretrain.txt",
+  "train_file": "data/sample.txt",
   "sample_by": "line",
   "streaming": true,
   "max_length": 4096,

@@ -42,7 +42,7 @@ class ModelArguments:
     )
 
     tokenizer_file: str = field(
-        default="configs/custom_tokenizer.json",
+        default="configs/tokenizer.json",
         metadata={"help": "Path to tokenizer JSON file produced by tokenizers library."},
     )
 
@@ -71,7 +71,7 @@ class ModelArguments:
 @dataclass
 class DataArguments:
     train_file: str = field(
-        default="data/part.txt",
+        default="data/pretrain.txt",
         metadata={"help": "Training text file path."},
     )
 

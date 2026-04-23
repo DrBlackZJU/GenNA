@@ -1,6 +1,9 @@
 Bio==1.8.1
 biopython==1.86
 datasets==3.6.0
+flash_attn==2.7.0.post1
+streamlit==1.52.2
 tokenizers==0.22.2
 torch==2.6.0+cu118
+tqdm==4.67.1
 transformers==4.57.1

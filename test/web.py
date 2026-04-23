@@ -1,4 +1,5 @@
 import importlib.util
+from pathlib import Path
 import re
 import threading
 import time
@@ -17,7 +18,14 @@ from transformers import (
 # =========================
 # 1. Path configuration
 # =========================
-MODEL_PATH = "../model/GenNA"
+APP_FILE = Path(__file__).resolve()
+PROJECT_ROOT = APP_FILE.parents[2]
+
+MODEL_DIR = PROJECT_ROOT / "model" / "GenNA"
+TOKENIZER_DIR = MODEL_DIR
+
+if not MODEL_DIR.exists():
+    raise FileNotFoundError(f"Required path not found: {MODEL_DIR}")
 
 # =========================
 # 2. Page setup
@@ -70,8 +78,8 @@ def get_available_devices():
 def load_model_and_tokenizer_uncached(device_name: str):
     device = torch.device(device_name)
 
-    tokenizer = PreTrainedTokenizerFast.from_pretrained(MODEL_PATH)
-    config = AutoConfig.from_pretrained(MODEL_PATH)
+    tokenizer = PreTrainedTokenizerFast.from_pretrained(TOKENIZER_DIR)
+    config = AutoConfig.from_pretrained(MODEL_DIR)
 
     model_kwargs = {
         "config": config,
@@ -82,7 +90,7 @@ def load_model_and_tokenizer_uncached(device_name: str):
         model_kwargs["attn_implementation"] = "flash_attention_2"
 
     model = AutoModelForCausalLM.from_pretrained(
-        MODEL_PATH,
+        MODEL_DIR,
         **model_kwargs,
     ).to(device)
 
