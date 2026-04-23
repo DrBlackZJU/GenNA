@@ -1,4 +1,3 @@
-<!-- fullWidth: false tocVisible: false tableWrap: true -->
 ---
 
 # GenNA: Conditional Generation of Nucleotide Sequences Guided by Natural-Language Annotations
@@ -33,16 +32,17 @@ https://ftp.ncbi.nlm.nih.gov/genomes/refseq/
 
 For example, for **Homo sapiens**, the required files are:
 
-- Genomic DNA:
+* **Genomic DNA**:
 
   ```text
   https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Homo_sapiens/reference/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.gbff.gz
-```
-- RNA:
+  ```
+
+* **RNA**:
 
   ```text
   https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Homo_sapiens/reference/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_rna.gbff.gz
-```
+  ```
 
 ### Data Preprocessing 🛠️
 
@@ -58,11 +58,7 @@ For **RNA** GenBank full files, run:
 python scripts/rna_preprocess.py input.gbff.gz output.txt
 ```
 
-The output format can be found in:
-
-```text
-data/sample.txt
-```
+See `data/sample.txt` for an example of what the output file looks like.
 
 You may also use your own GenBank full files to build a custom dataset.
 
@@ -72,8 +68,8 @@ You may also use your own GenBank full files to build a custom dataset.
 
 Available pretrained model checkpoints:
 
-- **3.6B**: `https://huggingface.co/DrBlack/GenNA`
-- **0.36B**: `https://huggingface.co/DrBlack/GenNA-small`
+* **3.6B**: `https://huggingface.co/DrBlack/GenNA`
+* **0.36B**: `https://huggingface.co/DrBlack/GenNA-small`
 
 After downloading, place the model weight folders into the `model/` directory.
 
@@ -117,6 +113,8 @@ If you have `streamlit` installed, you can also launch a web interface for gener
 streamlit run test/web.py
 ```
 
+![Web demo](images/web.png "Web demo")
+
 ---
 
 ## Generation Experiments 🧪
@@ -141,15 +139,10 @@ Then convert it to FASTA format:
 python downstream/tRNA/txt2fasta.py
 ```
 
-Install **tRNAscan-SE** and run tRNAscan-SE
+Install **tRNAscan-SE** and run it:
 
 ```bash
 conda install -c bioconda trnascan-se
-```
-
-Run the analysis:
-
-```bash
 tRNAscan-SE -E outputs/tRNA.fasta -o outputs/tRNAscan.txt
 ```
 
@@ -160,11 +153,3 @@ downstream/tRNA/visualize.ipynb
 ```
 
 and run the notebook to obtain the visualization results.
-
----
-
-## Notes 📝
-
-- You can preprocess both genomic and RNA GenBank full files.
-- You can build custom datasets using your own GenBank files.
-- The downstream folder contains experimental scripts and visualization notebooks for manuscript-related tasks.

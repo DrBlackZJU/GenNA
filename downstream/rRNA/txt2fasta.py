@@ -9,8 +9,8 @@ from pathlib import Path
 # =========================
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-INPUT_PATH = PROJECT_ROOT / "outputs" / "tRNA.txt"
-OUTPUT_PATH = PROJECT_ROOT / "outputs" / "tRNA.fasta"
+INPUT_PATH = PROJECT_ROOT / "outputs" / "rRNA.txt"
+OUTPUT_PATH = PROJECT_ROOT / "outputs" / "rRNA.fasta"
 
 LINE_WIDTH = 60
 
@@ -22,7 +22,7 @@ if not INPUT_PATH.exists():
 # Patterns
 # =========================
 
-DESC_PATTERN = re.compile(r"^genomic dna,\s*(.*?)<seq>", re.IGNORECASE)
+DESC_PATTERN = re.compile(r"^rna,\s*(.*?)<seq>", re.IGNORECASE)
 SEQ_PATTERN = re.compile(r"<seq>(.*?)</seq>", re.IGNORECASE)
 TAG_PATTERN = re.compile(r"<[^>]+>")
 NON_BASE_PATTERN = re.compile(r"[^ACGTU]")
@@ -67,7 +67,7 @@ def parse_line(line: str, lineno: int) -> tuple[str, str] | None:
 
     match_seq = SEQ_PATTERN.search(line)
     if match_seq is None:
-        print(f"[Warning] Line {lineno}: missing <seq> block, skipped.")
+        print(f"[Warning] Line {lino}: missing <seq> block, skipped.")
         return None
 
     seq_block = match_seq.group(1)

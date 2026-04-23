@@ -19,7 +19,7 @@ from transformers import (
 # 1. Path configuration
 # =========================
 APP_FILE = Path(__file__).resolve()
-PROJECT_ROOT = APP_FILE.parents[2]
+PROJECT_ROOT = APP_FILE.parents[1]
 
 MODEL_DIR = PROJECT_ROOT / "model" / "GenNA"
 TOKENIZER_DIR = MODEL_DIR
