@@ -1,15 +1,17 @@
+<!-- fullWidth: false tocVisible: false tableWrap: true -->
 # GenNA: Conditional Generation of Nucleotide Sequences Guided by Natural-Language Annotations
 
-## Introduction 📖
+## Overview
 
-**GenNA** is a framework for conditional generation of nucleotide sequences guided by natural-language annotations.
+**GenNA** is a generative nucleotide foundation model for conditional DNA/RNA sequence generation guided by natural-language annotations. The model is trained in an autoregressive manner on a multimodal corpus that combines nucleotide sequences, natural-language functional descriptions, species information, gene-related metadata, and XML-style structural annotations.
+
+Compared with conventional nucleotide language models that mainly rely on sequence context or structured labels, GenNA is designed to directly use natural language as a conditioning signal, enabling more flexible and human-readable sequence design.
 
 ![GenNA workflow](images/workflow.png "GenNA workflow")
 
+## Environment Setup
 
-## Environment Setup ⚙️
-
-To run this project, we recommend creating a conda environment as follows:
+We recommend creating a clean conda environment before running the project:
 
 ```bash
 conda create -n genna python=3.10
@@ -17,64 +19,49 @@ conda activate genna
 pip install -r requirements.txt
 ```
 
----
+## Pretraining Data
 
-## Pretraining Dataset 📂
+GenNA is designed to be pretrained from full-format **GenBank** files. The pretraining data in the manuscript were derived from the **NCBI RefSeq** database.
 
-Download the **GenBank full files** of your target species from the NCBI RefSeq database:
+RefSeq root directory:  `https://ftp.ncbi.nlm.nih.gov/genomes/refseq/`
 
-```text
-https://ftp.ncbi.nlm.nih.gov/genomes/refseq/
-```
+For example, for **Homo sapiens**, you may download:
 
-For example, for **Homo sapiens**, the required files are:
+- **Genomic DNA**: `https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Homo_sapiens/reference/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.gbff.gz`
+- **RNA**: `https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Homo_sapiens/reference/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_rna.gbff.gz`
 
-* **Genomic DNA**:
+You may also use your own GenBank files to build a custom multimodal dataset.
 
-  ```text
-  https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Homo_sapiens/reference/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.gbff.gz
-  ```
+## Data Preprocessing
 
-* **RNA**:
+To convert GenBank files into the text format used for model training, run:
 
-  ```text
-  https://ftp.ncbi.nlm.nih.gov/genomes/refseq/vertebrate_mammalian/Homo_sapiens/reference/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_rna.gbff.gz
-  ```
-
-### Data Preprocessing 🛠️
-
-For **Genomic DNA** GenBank full files, run:
+For **Genomic DNA**:
 
 ```bash
 python scripts/genome_preprocess.py input.gbff.gz output.txt
 ```
 
-For **RNA** GenBank full files, run:
+For **RNA**:
 
 ```bash
 python scripts/rna_preprocess.py input.gbff.gz output.txt
 ```
 
-See `data/sample.txt` for an example of what the output file looks like.
+An example for what our pretraining corpus looks like is available at `data/sample.txt`.
 
-You may also use your own GenBank full files to build a custom dataset.
+## Model Weights
 
----
+Available pretrained checkpoints:
 
-## Model Weights 📦
+- **GenNA-3.6B**: `https://huggingface.co/DrBlack/GenNA`
+- **GenNA-0.36B**: `https://huggingface.co/DrBlack/GenNA-small`
 
-Available pretrained model checkpoints:
+After downloading, place the checkpoint directories under `model/`.
 
-* **3.6B**: `https://huggingface.co/DrBlack/GenNA`
-* **0.36B**: `https://huggingface.co/DrBlack/GenNA-small`
+## Pretraining
 
-After downloading, place the model weight folders into the `model/` directory.
-
----
-
-## Pretraining 🚀
-
-To reproduce our pretraining pipeline or train your own model, run:
+To reproduce the pretraining pipeline or train on your own dataset:
 
 ```bash
 python train.py configs/train_GenNA.json
@@ -86,25 +73,13 @@ or
 python train.py configs/train_GenNA_small.json
 ```
 
-Please replace the following field in the config JSON file:
+Before training, replace the dataset path in the config file `"train_file": "data/sample.txt"` with your actual training file path.
 
-```json
-"train_file": "data/sample.txt"
-```
+## Quick Inference Test
 
-with the actual path to your training dataset.
+To quickly verify that the model can load and generate sequences correctly, open the notebook `test/test_generation.ipynb`
 
----
-
-## Testing ✅
-
-To test whether the model can generate sequences properly, use:
-
-```text
-test/test_generation.ipynb
-```
-
-If you have `streamlit` installed, you can also launch a web interface for generation testing:
+If `streamlit` is installed, you can also launch the web demo:
 
 ```bash
 streamlit run test/web.py
@@ -112,41 +87,42 @@ streamlit run test/web.py
 
 ![Web demo](images/web.png "Web demo")
 
----
+## Interpretability Analysis
 
-## Generation Experiments 🧪
+To better understand what GenNA has learned beyond generation, we provide several interpretability analyses corresponding to the experiments described in our manuscript.
 
-The scripts for generation experiments and visualization in the GenNA manuscript are located in the `downstream/` directory.
+## Generation Tasks
+In our manuscript, we completed several generation experiments including:
 
-For example, to evaluate **tRNA generation**, run:
+- unconditional self-guided generation
+- species-specific generation
+- targeted generation of structured non-coding RNAs such as **tRNAs** and **rRNAs**
+- targeted generation of protein-coding sequences such as **histones**
+- downstream evaluation and visualization of generated outputs
+
+Most of these scripts are available under `downstream/`.
+
+## Example: tRNA Generation
+
+To run the tRNA generation experiment:
 
 ```bash
 python downstream/tRNA/generate.py
 ```
 
-This will generate a file:
+This produces the output file `outputs/tRNA.txt`.
 
-```text
-outputs/tRNA.txt
-```
-
-Then convert it to FASTA format:
+Then convert the generated text file to FASTA format:
 
 ```bash
 python downstream/tRNA/txt2fasta.py
 ```
 
-Install **tRNAscan-SE** and run it:
+Install **tRNAscan-SE** and evaluate the generated sequences:
 
 ```bash
 conda install -c bioconda trnascan-se
 tRNAscan-SE -E outputs/tRNA.fasta -o outputs/tRNAscan.txt
 ```
 
-After that, fill in the path to the `tRNAscan-SE` output file in:
-
-```text
-downstream/tRNA/visualize.ipynb
-```
-
-and run the notebook to obtain the visualization results.
+After that, fill the output path into `downstream/tRNA/visualize.ipynb` and run the notebook to obtain the visualization results.
