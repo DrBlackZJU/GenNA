@@ -1,5 +1,3 @@
----
-
 # GenNA: Conditional Generation of Nucleotide Sequences Guided by Natural-Language Annotations
 
 ## Introduction 📖
@@ -8,7 +6,6 @@
 
 ![GenNA workflow](images/workflow.png "GenNA workflow")
 
----
 
 ## Environment Setup ⚙️
 
