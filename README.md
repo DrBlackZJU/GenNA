@@ -91,7 +91,10 @@ streamlit run test/web.py
 
 To better understand what GenNA has learned beyond generation, we provide several interpretability analyses corresponding to the experiments described in our manuscript.
 
+Run the `.ipynb` scripts under `interpret/` to reproduce those figures  in our manuscript. 
+
 ## Generation Tasks
+
 In our manuscript, we completed several generation experiments including:
 
 - unconditional self-guided generation
@@ -126,3 +129,17 @@ tRNAscan-SE -E outputs/tRNA.fasta -o outputs/tRNAscan.txt
 ```
 
 After that, fill the output path into `downstream/tRNA/visualize.ipynb` and run the notebook to obtain the visualization results.
+
+## Citation
+If you find this work useful, please cite our paper:
+```bibtex
+@article {Shen2026.04.22.720063,
+	author = {Shen, Yi and Cao, Guangshuo and Wu, Jianghong and Chen, Dijun and Feng, Cong and Chen, Ming},
+	title = {GenNA: Conditional generation of nucleotide sequences guided by natural-language annotations},
+	elocation-id = {2026.04.22.720063},
+	year = {2026},
+	doi = {10.64898/2026.04.22.720063},
+	URL = {https://www.biorxiv.org/content/early/2026/04/24/2026.04.22.720063},
+	eprint = {https://www.biorxiv.org/content/early/2026/04/24/2026.04.22.720063.full.pdf},
+	journal = {bioRxiv}
+}```
